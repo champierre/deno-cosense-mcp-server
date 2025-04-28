@@ -41,4 +41,11 @@ deno task start
 特定のScrapboxページの内容を取得します。
 
 パラメータ:
-- `pageTitle`: ページのタイトル
+- `title`: ページのタイトル
+
+### cosense_syntax_rule
+
+Cosenseの文法ルールを取得します。
+
+パラメータ:
+- なし（引数は必要ありません）
