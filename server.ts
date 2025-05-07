@@ -7,6 +7,7 @@ import {
   Tool,
   CallToolRequest,
 } from "npm:@modelcontextprotocol/sdk@1.5.0/types.js";
+import { cosenseSyntaxRules } from "./cosense_syntax_rules.ts";
 
 const COSENSE_BASE = "https://scrapbox.io";
 const COSENSE_API_BASE = "https://scrapbox.io/api/pages";
@@ -46,6 +47,15 @@ const TOOLS: Tool[] = [
       },
       required: ["title"]
     }
+  },
+  {
+    name: "cosense_syntax_rule",
+    description: "Get Cosense syntax rules",
+    inputSchema: {
+      type: "object",
+      properties: {},
+      required: []
+    }
   }
 ];
 const server = new Server(
@@ -58,7 +68,8 @@ const server = new Server(
       resources: {},
       tools: {
         cosense_search: TOOLS[0],
-        cosense_get_page: TOOLS[1]
+        cosense_get_page: TOOLS[1],
+        cosense_syntax_rule: TOOLS[2]
       },
     },
   }
@@ -138,10 +149,22 @@ server.setRequestHandler(ListResourcesRequestSchema, () => ({
 }));
 
 server.setRequestHandler(ListToolsRequestSchema, () => ({ tools: TOOLS }));
+
 server.setRequestHandler(CallToolRequestSchema, async (request: CallToolRequest) => {
   const name = request.params.name;
   const args = request.params.arguments ?? {};
   switch (name) {
+    case "cosense_syntax_rule":
+      return {
+        content: [
+          {
+            type: "text",
+            text: cosenseSyntaxRules,
+          },
+        ],
+        isError: false
+      };
+      break;
     case "cosense_search":
       const keywords = args.keywords as string;
       if (typeof keywords !== "string") {
